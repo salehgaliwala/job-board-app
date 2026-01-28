@@ -1,4 +1,25 @@
 <script setup>
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const form = ref({
+  email: '',
+  password: '',
+});
+
+const handleLogin = async () => {
+  try {
+    await authStore.login(form.value);
+    router.push('/jobs');
+  } catch (error) {
+    // Errors handled by store state or we can show a generic alert
+    console.error('Login error', error);
+  }
+};
 </script>
 
 <template>
@@ -8,11 +29,18 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <form class="space-y-6" @submit.prevent="handleLogin">
+        
+        <div v-if="authStore.errors && Object.keys(authStore.errors).length > 0" class="bg-red-50 text-red-500 p-3 rounded text-sm mb-4">
+             <ul>
+                <li v-for="(errors, field) in authStore.errors" :key="field">{{ errors[0] }}</li>
+             </ul>
+        </div>
+
         <div>
           <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
           <div class="mt-2">
-            <input id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" />
+            <input v-model="form.email" id="email" name="email" type="email" autocomplete="email" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-2" />
           </div>
         </div>
 
@@ -24,7 +52,7 @@
             </div>
           </div>
           <div class="mt-2">
-            <input id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" />
+            <input v-model="form.password" id="password" name="password" type="password" autocomplete="current-password" required="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-2" />
           </div>
         </div>
 
@@ -41,3 +69,4 @@
     </div>
   </div>
 </template>
+

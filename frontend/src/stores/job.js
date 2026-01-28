@@ -47,6 +47,20 @@ export const useJobStore = defineStore('job', {
             } finally {
                 this.loading = false;
             }
+        },
+
+        async createJob(jobData) {
+            this.loading = true;
+            this.error = null;
+            try {
+                await api.post('/jobs', jobData);
+                // We could refresh the list or just let the navigation handle it
+            } catch (err) {
+                this.error = err.response?.data?.message || 'Failed to create job';
+                throw err; // Re-throw to handle in component (e.g. valid errors)
+            } finally {
+                this.loading = false;
+            }
         }
     }
 });

@@ -25,6 +25,12 @@ const router = createRouter({
             component: () => import('../views/Jobs/JobIndex.vue')
         },
         {
+            path: '/jobs/create',
+            name: 'job-create',
+            component: () => import('../views/Jobs/JobCreate.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/jobs/:slug',
             name: 'job-details',
             component: () => import('../views/Jobs/JobShow.vue')
@@ -41,5 +47,35 @@ const router = createRouter({
         }
     ]
 })
+
+import { useAuthStore } from '@/stores/auth';
+
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore();
+
+    // Check if route requires auth
+    if (to.meta.requiresAuth) {
+        if (!authStore.isAuthenticated) {
+            // Try to fetch user if we suspect they might be logged in (e.g. cookie exists)
+            // But usually fetchUser is called on App mount. 
+            // If checking fails here, redirect.
+            if (!authStore.user) {
+                try {
+                    await authStore.fetchUser();
+                    if (authStore.isAuthenticated) next();
+                    else next('/login');
+                } catch (e) {
+                    next('/login');
+                }
+            } else {
+                next();
+            }
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 
 export default router

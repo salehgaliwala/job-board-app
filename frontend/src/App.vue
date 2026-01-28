@@ -1,9 +1,22 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterView } from 'vue-router'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { ref, onMounted } from 'vue'
+import { RouterView, useRouter } from 'vue-router'
+import { Bars3Icon, XMarkIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
+import Footer from '@/components/layout/Footer.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const mobileMenuOpen = ref(false)
+const authStore = useAuthStore()
+const router = useRouter()
+
+onMounted(() => {
+    authStore.fetchUser();
+})
+
+const handleLogout = async () => {
+    await authStore.logout();
+    router.push('/');
+}
 
 const navigation = [
   { name: 'Home', to: '/' },
@@ -39,9 +52,17 @@ const navigation = [
             {{ item.name }}
           </router-link>
         </div>
-        <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center" v-if="!authStore.isAuthenticated">
              <router-link to="/login" class="text-sm font-semibold leading-6 text-gray-900">Log in</router-link>
              <router-link to="/register" class="text-sm font-semibold leading-6 text-white bg-primary-600 px-3 py-2 rounded-md hover:bg-primary-500">Register</router-link>
+        </div>
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4 items-center" v-else>
+             <div class="flex items-center gap-x-2">
+                <UserCircleIcon class="h-8 w-8 text-gray-500" />
+                <span class="text-sm font-semibold leading-6 text-gray-900">{{ authStore.user?.name }}</span>
+             </div>
+             <button @click="handleLogout" class="text-sm font-semibold leading-6 text-gray-900 hover:text-red-600">Log out</button>
+             <router-link v-if="authStore.user?.role === 'employer'" to="/jobs/create" class="text-sm font-semibold leading-6 text-white bg-primary-600 px-3 py-2 rounded-md hover:bg-primary-500">Post a Job</router-link>
         </div>
       </nav>
       <!-- Mobile menu, show/hide based on menu state. -->
@@ -72,17 +93,28 @@ const navigation = [
                                 {{ item.name }}
                             </router-link>
                         </div>
-                        <div class="py-6 space-y-2">
+                        <div class="py-6 space-y-2" v-if="!authStore.isAuthenticated">
                             <router-link to="/login" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" @click="mobileMenuOpen = false">Log in</router-link>
                              <router-link to="/register" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-primary-600 hover:bg-gray-50" @click="mobileMenuOpen = false">Register</router-link>
+                        </div>
+                         <div class="py-6 space-y-2" v-else>
+                            <div class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900">
+                                <span class="flex items-center gap-2">
+                                    <UserCircleIcon class="h-5 w-5" />
+                                    {{ authStore.user?.name }}
+                                </span>
+                            </div>
+                            <router-link v-if="authStore.user?.role === 'employer'" to="/jobs/create" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-primary-600 hover:bg-gray-50" @click="mobileMenuOpen = false">Post a Job</router-link>
+                             <button @click="handleLogout(); mobileMenuOpen = false" class="-mx-3 block w-full text-left rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-red-600 hover:bg-gray-50">Log out</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    <main>
+    <main class="flex-grow">
         <RouterView />
     </main>
+    <Footer />
   </div>
 </template>
