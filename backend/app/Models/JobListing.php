@@ -36,12 +36,13 @@ class JobListing extends Model
 
     public function scopeFilter(Builder $query, array $filters): void
     {
-        if ($filters['category'] ?? false) {
-            $query->whereHas(
-                'category',
-                fn($q) =>
-                $q->where('slug', $filters['category'])
-            );
+        if ($filters['category_id'] ?? false) {
+            $query->where('category_id', $filters['category_id']);
+        }
+
+        if ($filters['type'] ?? false) {
+            // Assuming 'type' maps to job_type_id
+            $query->where('job_type_id', $filters['type']);
         }
 
         if ($filters['search'] ?? false) {
@@ -49,6 +50,11 @@ class JobListing extends Model
                 fn($q) =>
                 $q->where('title', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('description', 'like', '%' . $filters['search'] . '%')
+                    ->orWhereHas(
+                        'company',
+                        fn($c) =>
+                        $c->where('name', 'like', '%' . $filters['search'] . '%')
+                    )
             );
         }
     }

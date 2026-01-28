@@ -18,7 +18,7 @@ class JobController extends Controller
     {
         $query = JobListing::with(['company', 'category', 'jobType'])->active();
 
-        $query->filter($request->only(['category', 'search']));
+        $query->filter($request->only(['search', 'category_id', 'type']));
 
         return JobResource::collection($query->paginate(10));
     }
