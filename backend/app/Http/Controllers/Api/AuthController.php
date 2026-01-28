@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,14 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => $validated['role'],
         ]);
+
+        if ($validated['role'] === 'employer') {
+            $user->company()->create([
+                'name' => $user->name . "'s Company",
+                'slug' => Str::slug($user->name . "'s Company") . '-' . Str::random(5),
+                'description' => 'Default company profile.',
+            ]);
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 

@@ -4,11 +4,15 @@ import { useJobStore } from '@/stores/job';
 import { useRouter } from 'vue-router';
 import api from '@/services/api';
 
+import { useAuthStore } from '@/stores/auth';
+
 const jobStore = useJobStore();
+const authStore = useAuthStore();
 const router = useRouter();
 
 const form = ref({
     title: '',
+    company_name: '',
     category_id: '',
     job_type_id: '',
     location: '',
@@ -33,7 +37,11 @@ const fetchOptions = async () => {
     }
 };
 
-onMounted(() => {
+onMounted(async () => {
+    await authStore.fetchUser();
+    if (authStore.user?.company) {
+        form.value.company_name = authStore.user.company.name;
+    }
     fetchOptions();
 });
 
@@ -68,6 +76,15 @@ const handleSubmit = async () => {
         <div class="mt-2">
           <input v-model="form.title" type="text" name="title" id="title" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-3" placeholder="e.g. Senior Software Engineer" />
           <p v-if="errors.title" class="mt-2 text-sm text-red-600">{{ errors.title[0] }}</p>
+        </div>
+      </div>
+
+      <!-- Company Name -->
+      <div>
+        <label for="company_name" class="block text-sm font-medium leading-6 text-gray-900">Company Name</label>
+        <div class="mt-2">
+          <input v-model="form.company_name" type="text" name="company_name" id="company_name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-3" placeholder="e.g. Acme Corp" />
+          <p v-if="errors.company_name" class="mt-2 text-sm text-red-600">{{ errors.company_name[0] }}</p>
         </div>
       </div>
 

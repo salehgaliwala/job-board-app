@@ -32,12 +32,25 @@ class JobController extends Controller
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']) . '-' . Str::random(6);
 
-        // Assuming user has a company. In a real app, we'd check this relation.
-        // For this demo, we assume the user->company relation exists or we find the company.
-        $company = $request->user()->company;
+        // Handle Company Logic
+        $user = $request->user();
+        $company = $user->company;
 
-        if (!$company) {
-            return response()->json(['message' => 'User does not have a company profile.'], 403);
+        if ($company) {
+            // Update existing company name if it changed
+            if ($company->name !== $data['company_name']) {
+                $company->update([
+                    'name' => $data['company_name'],
+                    'slug' => Str::slug($data['company_name']) . '-' . Str::random(5),
+                ]);
+            }
+        } else {
+            // Create new company
+            $company = $user->company()->create([
+                'name' => $data['company_name'],
+                'slug' => Str::slug($data['company_name']) . '-' . Str::random(5),
+                'description' => 'Default company profile.',
+            ]);
         }
 
         $job = $company->jobs()->create($data);
