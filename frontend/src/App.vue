@@ -62,6 +62,7 @@ const navigation = [
                 <span class="text-sm font-semibold leading-6 text-gray-900">{{ authStore.user?.name }}</span>
              </div>
              <button @click="handleLogout" class="text-sm font-semibold leading-6 text-gray-900 hover:text-red-600">Log out</button>
+             <router-link v-if="authStore.user?.role === 'employer'" to="/employer/dashboard" class="text-sm font-semibold leading-6 text-gray-900 hover:text-primary-600">Dashboard</router-link>
              <router-link v-if="authStore.user?.role === 'employer'" to="/jobs/create" class="text-sm font-semibold leading-6 text-white bg-primary-600 px-3 py-2 rounded-md hover:bg-primary-500">Post a Job</router-link>
         </div>
       </nav>
@@ -98,12 +99,10 @@ const navigation = [
                              <router-link to="/register" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-primary-600 hover:bg-gray-50" @click="mobileMenuOpen = false">Register</router-link>
                         </div>
                          <div class="py-6 space-y-2" v-else>
-                            <div class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900">
-                                <span class="flex items-center gap-2">
-                                    <UserCircleIcon class="h-5 w-5" />
                                     {{ authStore.user?.name }}
                                 </span>
                             </div>
+                            <router-link v-if="authStore.user?.role === 'employer'" to="/employer/dashboard" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" @click="mobileMenuOpen = false">Dashboard</router-link>
                             <router-link v-if="authStore.user?.role === 'employer'" to="/jobs/create" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-primary-600 hover:bg-gray-50" @click="mobileMenuOpen = false">Post a Job</router-link>
                              <button @click="handleLogout(); mobileMenuOpen = false" class="-mx-3 block w-full text-left rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-red-600 hover:bg-gray-50">Log out</button>
                         </div>

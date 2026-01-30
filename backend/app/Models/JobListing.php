@@ -29,6 +29,11 @@ class JobListing extends Model
         return $this->belongsTo(JobType::class);
     }
 
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'job_id');
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('status', 'active');

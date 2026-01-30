@@ -41,6 +41,12 @@ const router = createRouter({
             component: () => import('../views/AboutView.vue')
         },
         {
+            path: '/employer/dashboard',
+            name: 'employer-dashboard',
+            component: () => import('../views/Employer/EmployerDashboard.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/contact',
             name: 'contact',
             component: () => import('../views/ContactView.vue')
