@@ -55,6 +55,10 @@ class JobController extends Controller
 
         $job = $company->jobs()->create($data);
 
+        if ($request->has('skills')) {
+            $job->skills()->sync($request->input('skills'));
+        }
+
         return new JobResource($job);
     }
 

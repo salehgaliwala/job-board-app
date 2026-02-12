@@ -25,7 +25,13 @@ onMounted(async () => {
 
 <template>
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-6">Employer Dashboard</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900">Employer Dashboard</h1>
+            <div class="flex space-x-4">
+                <router-link :to="{ name: 'candidate-search' }" class="text-indigo-600 hover:text-indigo-900">Candidate Search</router-link>
+                <router-link :to="{ name: 'resume-alerts' }" class="text-indigo-600 hover:text-indigo-900">Resume Alerts</router-link>
+            </div>
+        </div>
 
         <div v-if="loading" class="text-center py-4">Loading applications...</div>
         <div v-else-if="error" class="text-red-600 py-4">{{ error }}</div>
@@ -67,6 +73,9 @@ onMounted(async () => {
                                     </p>
                                 </div>
                                 <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                    <router-link :to="{ name: 'candidate-match', params: { id: job.id }}" class="text-indigo-600 hover:text-indigo-900 mr-4">
+                                        Find Candidates
+                                    </router-link>
                                     <a :href="'http://localhost:8000/storage/' + application.resume_path" target="_blank" class="text-indigo-600 hover:text-indigo-900">
                                         View Resume
                                     </a>

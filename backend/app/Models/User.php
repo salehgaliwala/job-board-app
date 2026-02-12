@@ -51,4 +51,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Company::class);
     }
+
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'skill_user');
+    }
+
+    public function resumeAlerts()
+    {
+        return $this->hasMany(ResumeAlert::class);
+    }
 }

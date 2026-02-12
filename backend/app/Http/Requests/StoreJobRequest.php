@@ -31,6 +31,8 @@ class StoreJobRequest extends FormRequest
             'salary_range' => 'nullable|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'job_type_id' => 'required|exists:job_types,id',
+            'skills' => 'nullable|array',
+            'skills.*' => 'exists:skills,id',
         ];
     }
 

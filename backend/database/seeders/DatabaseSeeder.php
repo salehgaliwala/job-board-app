@@ -7,6 +7,7 @@ use App\Models\JobListing;
 use App\Models\Category;
 use App\Models\JobType;
 use App\Models\Company;
+use App\Models\Skill;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -69,5 +70,34 @@ class DatabaseSeeder extends Seeder
             'category_id' => $categories->random()->id,
             'job_type_id' => $jobTypes->random()->id,
         ]);
+        // 5. Skills
+        $skillNames = ['PHP', 'Laravel', 'Vue.js', 'React', 'JavaScript', 'HTML', 'CSS', 'Tailwind', 'MySQL', 'Node.js', 'Python', 'Django', 'Git', 'Docker', 'AWS'];
+        $skills = collect($skillNames)->map(function ($name) {
+            return Skill::create(['name' => $name]);
+        });
+
+        // 6. Seekers with Skills
+        $seekers = User::factory(10)->create([
+            'role' => 'seeker',
+        ]);
+
+        foreach ($seekers as $seeker) {
+            $seeker->skills()->attach($skills->random(rand(2, 5))->pluck('id'));
+        }
+
+        // Test Seeker
+        $testSeeker = User::factory()->create([
+            'name' => 'Test Seeker',
+            'email' => 'seeker@example.com',
+            'role' => 'seeker',
+            'password' => bcrypt('password'),
+        ]);
+        $testSeeker->skills()->attach($skills->whereIn('name', ['PHP', 'Laravel', 'Vue.js'])->pluck('id'));
+
+        // 7. Attach Skills to Jobs
+        $allJobs = JobListing::all();
+        foreach ($allJobs as $job) {
+            $job->skills()->attach($skills->random(rand(1, 4))->pluck('id'));
+        }
     }
 }

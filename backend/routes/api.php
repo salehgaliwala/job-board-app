@@ -8,6 +8,10 @@ use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\JobTypeController;
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\SkillController;
+use App\Http\Controllers\Api\CandidateController;
+use App\Http\Controllers\Api\ResumeAlertController;
+use App\Http\Controllers\Api\ProfileController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -31,8 +35,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/jobs/{id}', [JobController::class, 'destroy']);
     Route::get('/employer/applications', [ApplicationController::class, 'employerIndex']);
 
+    // Candidate Search & Alerts
+    Route::get('/skills', [SkillController::class, 'index']);
+    Route::post('/skills', [SkillController::class, 'store']);
+    Route::get('/candidates', [CandidateController::class, 'index']);
+    Route::get('/jobs/{id}/matches', [CandidateController::class, 'match']);
+    Route::get('/alerts', [ResumeAlertController::class, 'index']);
+    Route::post('/alerts', [ResumeAlertController::class, 'store']);
+    Route::delete('/alerts/{resumeAlert}', [ResumeAlertController::class, 'destroy']);
+
     // Seeker Routes
     Route::post('/jobs/{id}/apply', [ApplicationController::class, 'store']);
     Route::get('/seeker/applications', [ApplicationController::class, 'seekerIndex']);
+    Route::post('/profile/skills', [ProfileController::class, 'updateSkills']);
 });
 

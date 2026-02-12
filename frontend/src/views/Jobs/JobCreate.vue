@@ -17,12 +17,45 @@ const form = ref({
     job_type_id: '',
     location: '',
     salary_range: '',
-    description: ''
+    description: '',
+    skills: []
 });
 
 const categories = ref([]);
 const jobTypes = ref([]);
 const errors = ref({});
+
+const availableSkills = ref([]);
+const selectedSkills = ref([]);
+
+const fetchSkills = async (query) => {
+    if (!query) return;
+    try {
+        const response = await api.get(`/skills?query=${query}`);
+        availableSkills.value = response.data;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+const addSkill = (skill) => {
+    if (!selectedSkills.value.find(s => s.id === skill.id)) {
+        selectedSkills.value.push(skill);
+        form.value.skills.push(skill.id);
+    }
+    availableSkills.value = [];
+};
+
+const removeSkill = (skillId) => {
+    selectedSkills.value = selectedSkills.value.filter(s => s.id !== skillId);
+    form.value.skills = form.value.skills.filter(id => id !== skillId);
+};
+
+let timeout;
+const onSkillInput = (e) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fetchSkills(e.target.value), 300);
+};
 
 const fetchOptions = async () => {
     try {
@@ -139,6 +172,31 @@ const handleSubmit = async () => {
           <textarea v-model="form.description" id="description" name="description" rows="5" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-3"></textarea>
            <p v-if="errors.description" class="mt-2 text-sm text-red-600">{{ errors.description[0] }}</p>
         </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Required Skills</label>
+            <div class="mt-1 relative">
+                <input type="text" @input="onSkillInput"
+                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 px-3"
+                    placeholder="Type to search skills...">
+                
+                <div v-if="availableSkills.length" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                    <div v-for="skill in availableSkills" :key="skill.id" 
+                        @click="addSkill(skill)"
+                        class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white">
+                        {{ skill.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 flex flex-wrap gap-2">
+                <span v-for="skill in selectedSkills" :key="skill.id" 
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                    {{ skill.name }}
+                    <button type="button" @click="removeSkill(skill.id)" class="ml-1 text-indigo-400 hover:text-indigo-600">×</button>
+                </span>
+            </div>
       </div>
 
       <div class="flex justify-end gap-x-3">

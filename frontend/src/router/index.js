@@ -47,6 +47,30 @@ const router = createRouter({
             meta: { requiresAuth: true }
         },
         {
+            path: '/employer/search',
+            name: 'candidate-search',
+            component: () => import('../views/Employer/CandidateSearch.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/employer/alerts',
+            name: 'resume-alerts',
+            component: () => import('../views/Employer/ResumeAlerts.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/jobs/:id/match',
+            name: 'candidate-match',
+            component: () => import('../views/Employer/CandidateMatch.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: () => import('../views/Seeker/Profile.vue'),
+            meta: { requiresAuth: true }
+        },
+        {
             path: '/contact',
             name: 'contact',
             component: () => import('../views/ContactView.vue')

@@ -12,6 +12,11 @@ A modern, full-stack Job Board application built with **Laravel 11** and **Vue.j
 *   **Job Seekers**: Apply for jobs with resume uploads and track application status.
 *   **Modern UI/UX**: Built with Vue 3, Tailwind CSS, and headless UI components for a responsive and accessible design.
 *   **RESTful API**: Robust backend API serving data to the frontend.
+*   **Advanced Employer Tools**:
+    *   **Boolean Search**: Find candidates using complex keyword combinations (e.g., "PHP AND Laravel").
+    *   **Smart Talent Search**: Filter and rank candidates based on skill matches.
+    *   **Candidate Matching**: Automatically see best-fit candidates for each job posting.
+    *   **Resume Alerts**: get notified when new candidates match your specific criteria.
 
 ## 🛠️ Technology Stack
 
