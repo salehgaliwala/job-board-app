@@ -16,7 +16,8 @@ A modern, full-stack Job Board application built with **Laravel 11** and **Vue.j
     *   **Boolean Search**: Find candidates using complex keyword combinations (e.g., "PHP AND Laravel").
     *   **Smart Talent Search**: Filter and rank candidates based on skill matches.
     *   **Candidate Matching**: Automatically see best-fit candidates for each job posting.
-    *   **Resume Alerts**: get notified when new candidates match your specific criteria.
+    *   **Resume Alerts**: Get notified when new candidates match your specific criteria.
+    *   **Email Notifications**: Employers receive instant email alerts when a new candidate applies for a job.
 
 ## 🛠️ Technology Stack
 
@@ -44,9 +45,11 @@ cd job-board-app
 cd backend
 composer install
 cp .env.example .env
-# Configure your database credentials in .env
+# Configure your database and mail credentials in .env
+# Set FRONTEND_URL=http://localhost:3000 (or your frontend port)
 php artisan key:generate
 php artisan migrate
+php artisan storage:link
 php artisan serve
 ```
 
