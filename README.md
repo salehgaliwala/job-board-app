@@ -18,6 +18,7 @@ A modern, full-stack Job Board application built with **Laravel 11** and **Vue.j
     *   **Candidate Matching**: Automatically see best-fit candidates for each job posting.
     *   **Resume Alerts**: Get notified when new candidates match your specific criteria.
     *   **Email Notifications**: Employers receive instant email alerts when a new candidate applies for a job.
+    *   **Live Chat**: Direct messaging between employers and job seekers (initiated by employers).
 
 ## 🛠️ Technology Stack
 

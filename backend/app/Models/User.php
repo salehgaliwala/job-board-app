@@ -61,4 +61,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(ResumeAlert::class);
     }
+
+    public function employerConversations()
+    {
+        return $this->hasMany(Conversation::class, 'employer_id');
+    }
+
+    public function seekerConversations()
+    {
+        return $this->hasMany(Conversation::class, 'seeker_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 }

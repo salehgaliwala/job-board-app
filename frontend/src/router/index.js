@@ -74,6 +74,12 @@ const router = createRouter({
             path: '/contact',
             name: 'contact',
             component: () => import('../views/ContactView.vue')
+        },
+        {
+            path: '/chat',
+            name: 'chat',
+            component: () => import('../views/ChatView.vue'),
+            meta: { requiresAuth: true }
         }
     ]
 })

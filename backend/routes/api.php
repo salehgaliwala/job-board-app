@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\ResumeAlertController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ChatController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -26,6 +27,12 @@ Route::get('/job-types', [JobTypeController::class, 'index']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+    // Live Chat Routes
+    Route::get('/conversations', [ChatController::class, 'index']);
+    Route::post('/conversations', [ChatController::class, 'store']);
+    Route::get('/conversations/{conversation}', [ChatController::class, 'show']);
+    Route::post('/conversations/{conversation}/messages', [ChatController::class, 'sendMessage']);
 
     // Employer Routes
     Route::post('/companies', [CompanyController::class, 'store']);
